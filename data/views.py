@@ -51,5 +51,5 @@ class TeamRetrieve(RetrieveAPIView):
 class CompetitionRetrieve(RetrieveAPIView):
     queryset = Competition.objects.all()
     serializer_class = CompetitionSerializer
-        
+
 
