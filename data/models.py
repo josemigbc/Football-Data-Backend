@@ -10,9 +10,9 @@ class Competition(models.Model):
 
 class Team(models.Model):
     id = models.IntegerField(primary_key=True)
-    name = models.CharField(max_length=100)
-    short_name = models.CharField(max_length=50)
-    tla = models.CharField(max_length=3)
+    name = models.CharField(max_length=100,unique=True)
+    short_name = models.CharField(max_length=50,unique=True)
+    tla = models.CharField(max_length=3,unique=True)
     logo = models.TextField()
 
 class Match(models.Model):
@@ -24,7 +24,7 @@ class Match(models.Model):
     stage = models.CharField(max_length=100)
     group = models.CharField(max_length=100,null=True,blank=True)
     last_updated = models.DateTimeField()
-    winner = models.CharField(max_length=100,choices=[('1','HOME_TEAM'),('X','DRAW'),('2','AWAY_TEAM')])
+    winner = models.CharField(max_length=100,choices=[('HOME_TEAM','HOME_TEAM'),('DRAW','DRAW'),('AWAY_TEAM','AWAY_TEAM')])
     duration = models.CharField(max_length=100,choices=[("REGULAR","REGULAR"),( "EXTRA_TIME", "EXTRA_TIME"),("PENALTY_SHOOTOUT","PENALTY_SHOOTOUT")])
     fulltime_home = models.IntegerField()
     fulltime_away = models.IntegerField()
