@@ -4,7 +4,8 @@ from accounts.models import User
 from balance.models import Balance
 from rest_framework import status
 from rest_framework_simplejwt.tokens import AccessToken
-from data.data import save_match,save_competition,save_team
+from data.data_test import match_data,team_data1,team_data2,competition_data
+from data.data import save_match,save_competition,save_team,get_matches,competitions
 
 # Create your tests here.
 class DataTests(APITestCase):
@@ -177,122 +178,61 @@ class DataTests(APITestCase):
         self.assertEqual(response.status_code,status.HTTP_404_NOT_FOUND)
     
     def test_save_match(self):
-        match_data = {
-            "id": 2,
-            "competition": {
-                "id":10,
-                "name": "Liga Test 10",
-                "type": "ELIMINATORIES",
-                "logo": "/logo.png",
-            },
-            "utcDate": "2022-01-23T19:00:00Z",
-            "status": "IN_PLAY",
-            "matchday": 28,
-            "stage": "FINAL",
-            "group": "GROUP_B",
-            "last_updated": "2022-09-12T19:00:00Z",
-            "winner":'DRAW',
-            "duration": "EXTRA_TIME",
-            "fulltime_home": 2,
-            "fulltime_away": 2,
-            "halftime_home": 1,
-            "halftime_away": 1,
-            "referee": "Michael Oliver",
-            "home_team": {
-                "id":10,
-                "name": "Test FC",
-                "short_name": "Test FC",
-                "tla": "TFC",
-                "logo": "/logo.png",
-            },
-            "away_team": {
-                "id":11,
-                "name": "Test UD",
-                "short_name": "Test UD",
-                "tla": "TUD",
-                "logo": "/logo.png",
-            },
-        }
-        
         success = save_match(match_data.copy())
-        match = Match.objects.get(id=2)
+        match = Match.objects.get(id=match_data.get("id"))
         self.assertEqual(success,True)
         self.assertEqual(match.competition.id,match_data.get("competition",None).get("id",None))
         self.assertEqual(match.status,match_data.get("status",None))
-        self.assertEqual(match.home_team.id,match_data.get("home_team",None).get("id",None))
+        self.assertEqual(match.home_team.id,match_data.get("homeTeam",None).get("id",None))
         
         match_data["fulltime_away"] = 5
         success = save_match(match_data.copy())
-        match = Match.objects.get(id=2)
+        match = Match.objects.get(id=match_data.get("id"))
         self.assertEqual(success,True)
         self.assertEqual(match.competition.id,match_data.get("competition",None).get("id",None))
         self.assertEqual(match.status,match_data.get("status"),None)
-        self.assertEqual(match.home_team.id,match_data.get("home_team",None).get("id",None))
-        self.assertEqual(match.fulltime_away,match_data.get("fulltime_away",None))
+        self.assertEqual(match.home_team.id,match_data.get("homeTeam",None).get("id",None))
+        self.assertEqual(match.fulltime_away,match_data.get("score",None).get("fullTime",None).get("away",None))
         
         match_data["id"] = 5
         success = save_match(match_data.copy())
         self.assertEqual(success,True)
-        match = Match.objects.get(id=5)
+        match = Match.objects.get(id=match_data.get("id"))
         self.assertEqual(match.competition.id,match_data.get("competition",None).get("id",None))
         self.assertEqual(match.status,match_data.get("status",None))
-        self.assertEqual(match.home_team.id,match_data.get("home_team",None).get("id",None))
+        self.assertEqual(match.home_team.id,match_data.get("homeTeam",None).get("id",None))
         self.assertEqual(match.id,match_data.get("id",None))
         
         match_data["id"] = 4
-        match_data.pop("home_team")
+        match_data.pop("homeTeam")
         success = save_match(match_data.copy())
         self.assertEqual(success,False)
         
     def test_save_team(self):
-        team_data = {
-            "id":1,
-            "name": "Test Town",
-            "short_name": "Test Town",
-            "tla": "TTW",
-            "logo": "/logo.png",
-        }
+        success = save_team(team_data1)
         
-        success = save_team(team_data)
-        team = Team.objects.get(id=team_data.get("id"))
         self.assertEqual(success,True)
-        self.assertEqual(team.name,team_data.get("name"))
-        self.assertEqual(team.short_name,team_data.get("short_name"))
-        self.assertEqual(team.tla,team_data.get("tla"))
+        team = Team.objects.get(id=team_data1.get("id"))
+        self.assertEqual(team.name,team_data1.get("name"))
+        self.assertEqual(team.short_name,team_data1.get("short_name"))
+        self.assertEqual(team.tla,team_data1.get("tla"))
         
-        team_data["short_name"] = "TT"
-        success = save_team(team_data)
-        team = Team.objects.get(id=team_data.get("id"))
+        team_data1["short_name"] = "TT"
+        success = save_team(team_data1)
+        team = Team.objects.get(id=team_data1.get("id"))
         self.assertEqual(success,True)
-        self.assertEqual(team.name,team_data.get("name"))
-        self.assertEqual(team.short_name,team_data.get("short_name"))
-        self.assertEqual(team.tla,team_data.get("tla"))
+        self.assertEqual(team.name,team_data1.get("name"))
+        self.assertEqual(team.short_name,team_data1.get("short_name"))
+        self.assertEqual(team.tla,team_data1.get("tla"))
         
-        team_data["id"] = 3
-        success = save_team(team_data)
+        team_data1["id"] = 3
+        success = save_team(team_data1)
         self.assertEqual(success,False)
         
-        team_data = {
-            "id":3,
-            "name": "Test Wolves",
-            "short_name": "Wolves",
-            "tla": "TW",
-            "logo": "/logo.png",
-        }
-        
-        team_data["id"] = 3
-        success = save_team(team_data)
+        success = save_team(team_data2)
         self.assertEqual(success,True)
         
     def test_save_competition(self):
-        
-        competition_data = {
-            "id":1,
-            "name": "Liga Test 3",
-            "type": "ELIMINATORIES",
-            "logo": "/logo.png",
-        }
-        
         success = save_competition(competition_data)
         competition = Competition.objects.get(id=competition_data.get("id"))
         self.assertEqual(success,True)
@@ -309,6 +249,11 @@ class DataTests(APITestCase):
         competition_data["id"] = 3
         success = save_competition(competition_data)
         self.assertEqual(success,True)
+        
+    def test_get_matches_api(self):
+        for competition in competitions:
+            success = get_matches(competition)
+            self.assertEqual(success,True)
         
         
         
