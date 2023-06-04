@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'accounts',
     'balance',
     'data',
+    'predict',
 ]
 
 MIDDLEWARE = [

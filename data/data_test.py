@@ -4,4 +4,12 @@ team_data1 = {'id': 78, 'name': 'Club Atlético de Madrid', 'shortName': 'Atleti
 
 team_data2 = {'id': 94, 'name': 'Villarreal CF', 'shortName': 'Villarreal', 'tla': 'VIL', 'crest': 'https://crests.football-data.org/94.png'}
 
+team_data3 = {
+            "id":2,
+            "name":"Test City FC",
+            "shortName":"Test City",
+            "tla":"TCI",
+            "crest":"/logotest2.png",
+        }
+
 competition_data = {'id': 2014, 'name': 'Primera Division', 'code': 'PD', 'type': 'LEAGUE', 'emblem': 'https://crests.football-data.org/PD.png'}

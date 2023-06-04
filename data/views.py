@@ -1,7 +1,7 @@
 from rest_framework.generics import RetrieveAPIView,ListAPIView
 from rest_framework.views import APIView
-from .serializers import MatchSerializer,TeamSerializer,CompetitionSerializer
-from .models import Match,Team,Competition
+from .serializers import MatchSerializer,TeamSerializer,CompetitionSerializer,FTETeamSerializer
+from .models import Match,Team,Competition,FTETeam
 from rest_framework.response import Response
 from rest_framework import status
 import datetime 
@@ -52,4 +52,7 @@ class CompetitionRetrieve(RetrieveAPIView):
     queryset = Competition.objects.all()
     serializer_class = CompetitionSerializer
 
+class FTETeamRetrieve(RetrieveAPIView):
+    queryset = FTETeam.objects.all()
+    serializer_class = FTETeamSerializer
 

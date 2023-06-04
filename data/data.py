@@ -1,11 +1,26 @@
 import requests
-from .models import Match,Team,Competition
-from .serializers import MatchSerializer,TeamSerializer,CompetitionSerializer
+from .models import Match,Team,Competition,FTETeam
+from .serializers import MatchSerializer,TeamSerializer,CompetitionSerializer,FTETeamSerializer
+from Levenshtein import distance
+from functools import reduce
 
 competitions = ["FL1","BL1","PD","PL","SA","CL",]
 
 url = "https://api.football-data.org/v4/competitions/"
 headers = {'X-Auth-Token': '40ddfae19e684296ba3a3859b301e1aa'}
+
+def closest_string(string:str,list_string):
+    return reduce(lambda str1,str2: str1 if distance(str1,string) < distance(str2,string) else str2,list_string)
+
+def get_FTE_teams():
+    url = ""
+    #requests.get(url)
+    fte_names = ["Test City", "Test Utd", "FC Test","UD Test"]
+    for fte_name in fte_names:
+        serializer = FTETeamSerializer(data={"name":fte_name})
+        if serializer.is_valid():
+            serializer.save()
+        print(serializer.errors)
 
 def save_team(team_data:dict):
     if not team_data:
@@ -16,6 +31,13 @@ def save_team(team_data:dict):
     }
     team_data.update(corrections)
     team = Team.objects.filter(id=team_data.get("id",None))
+    fte_name_raw = FTETeam.objects.all().values('name')
+    if not fte_name_raw:
+        get_FTE_teams()
+        fte_name_raw = FTETeam.objects.all().values('name')
+    fte_names = list(map(lambda x: x["name"],fte_name_raw))
+    fte_name = closest_string(team_data.get("name"),fte_names)
+    team_data["fte_name"] = FTETeam.objects.get(name=fte_name).id
     serializer = TeamSerializer(team[0] if team else None,data=team_data)
     if serializer.is_valid():
         serializer.save()

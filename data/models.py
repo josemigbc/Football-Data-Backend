@@ -8,11 +8,14 @@ class Competition(models.Model):
     type = models.CharField(max_length=50)
     logo = models.TextField()
 
+class FTETeam(models.Model):
+    name = models.CharField(max_length=100,unique=True)
 class Team(models.Model):
     id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=100,unique=True)
     short_name = models.CharField(max_length=50,unique=True)
     tla = models.CharField(max_length=3,unique=True)
+    fte_name = models.OneToOneField(FTETeam,on_delete=models.CASCADE,null=True,blank=True)
     logo = models.TextField()
 
 class Match(models.Model):

@@ -19,7 +19,7 @@ from django.urls import path,include
 from rest_framework_simplejwt.views import TokenObtainPairView,TokenRefreshView
 from accounts.views import UserView
 from balance.views import BalanceView
-from data.views import TeamRetrieve,CompetitionRetrieve
+from data.views import TeamRetrieve,CompetitionRetrieve,FTETeamRetrieve
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -28,6 +28,7 @@ urlpatterns = [
     path("api/user/", UserView.as_view(), name="user"),
     path("api/balance/",BalanceView.as_view(),name="balance"),
     path("api/team/<int:pk>/", TeamRetrieve.as_view(), name="team"),
-    path("api/competition/<int:pk>/", CompetitionRetrieve.as_view(), name=""),
+    path("api/competition/<int:pk>/", CompetitionRetrieve.as_view(), name="competition"),
+    path("api/fte_name/<int:pk>/", FTETeamRetrieve.as_view(),name="fte_name"),
     path("api/match/",include("data.urls")),
 ]
