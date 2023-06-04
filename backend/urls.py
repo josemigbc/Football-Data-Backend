@@ -20,6 +20,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView,TokenRefreshView
 from accounts.views import UserView
 from balance.views import BalanceView
 from data.views import TeamRetrieve,CompetitionRetrieve,FTETeamRetrieve
+from predict.views import GameRetrieveDestroyView,GameListCreateView,OddsRetrieve
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -31,4 +32,7 @@ urlpatterns = [
     path("api/competition/<int:pk>/", CompetitionRetrieve.as_view(), name="competition"),
     path("api/fte_name/<int:pk>/", FTETeamRetrieve.as_view(),name="fte_name"),
     path("api/match/",include("data.urls")),
+    path("api/game/",GameListCreateView.as_view(),name="game list-post"),
+    path("api/game/<int:pk>/",GameRetrieveDestroyView.as_view(),name="game"),
+    path("api/odds/<int:id>/",OddsRetrieve.as_view(),name="odds"),
 ]
