@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path,include
 from rest_framework_simplejwt.views import TokenObtainPairView,TokenRefreshView
-from accounts.views import UserView
+from accounts.views import UserView,UserCreationView
 from balance.views import BalanceView
 from data.views import TeamRetrieve,CompetitionRetrieve,FTETeamRetrieve
 from predict.views import GameRetrieveDestroyView,GameListCreateView,OddsRetrieve
@@ -27,6 +27,7 @@ urlpatterns = [
     path('api/token/', TokenObtainPairView.as_view(),name='token_obtain_pair'),
     path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     path("api/user/", UserView.as_view(), name="user"),
+    path("api/signup/", UserCreationView.as_view(), name="signup"),
     path("api/balance/",BalanceView.as_view(),name="balance"),
     path("api/team/<int:pk>/", TeamRetrieve.as_view(), name="team"),
     path("api/competition/<int:pk>/", CompetitionRetrieve.as_view(), name="competition"),
