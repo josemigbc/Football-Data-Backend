@@ -260,13 +260,7 @@ class DataTests(APITestCase):
         success = save_competition(competition_data)
         self.assertEqual(success,True)
         
-    """ def test_get_matches_api(self):
+    def test_get_matches_api(self):
         for competition in competitions:
             success = get_matches(competition)
-            self.assertEqual(success,True) """
-        
-        
-        
-        
-        
-        
+            self.assertEqual(success,True)      

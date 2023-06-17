@@ -227,3 +227,8 @@ class PredictTests(APITestCase):
     def test_odds_view_with_match_exist_odds_not(self):
         response = self.client.get("/api/odds/1/")
         self.assertEqual(status.HTTP_204_NO_CONTENT,response.status_code)
+    
+    def test_get_probs(self):
+        competitions = ["champions-league","bundesliga","premier-league","la-liga","ligue-1","serie-a"]
+        success = [get_probs(league) for league in competitions]
+        self.assertTrue(all(success))
