@@ -39,9 +39,10 @@ class MatchDateListView(ListAPIView):
         year = self.kwargs.get("year",None)
         month = self.kwargs.get("month",None)
         day = self.kwargs.get("day",None)
+        date = datetime.date(year,month,day)
         
         if all([year,month,day]):
-            queryset = Match.objects.filter(utcDate__year=year,utcDate__month=month,utcDate__day=day).order_by("-utcDate")
+            queryset = Match.objects.filter(utcDate__date=date).order_by("-utcDate")
         return queryset
 
 class TeamRetrieve(RetrieveAPIView):

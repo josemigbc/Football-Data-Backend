@@ -31,13 +31,13 @@ def save_team(team_data:dict):
     }
     team_data.update(corrections)
     team = Team.objects.filter(id=team_data.get("id",None))
-    fte_name_raw = FTETeam.objects.all().values('name')
+    """ fte_name_raw = FTETeam.objects.all().values('name')
     if not fte_name_raw:
         get_FTE_teams()
         fte_name_raw = FTETeam.objects.all().values('name')
     fte_names = list(map(lambda x: x["name"],fte_name_raw))
     fte_name = closest_string(team_data.get("name"),fte_names)
-    team_data["fte_name"] = FTETeam.objects.get(name=fte_name).id
+    team_data["fte_name"] = FTETeam.objects.get(name=fte_name).id """
     serializer = TeamSerializer(team[0] if team else None,data=team_data)
     if serializer.is_valid():
         serializer.save()
