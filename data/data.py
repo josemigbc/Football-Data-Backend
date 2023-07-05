@@ -3,6 +3,7 @@ from .models import Match,Team,Competition,FTETeam
 from .serializers import MatchSerializer,TeamSerializer,CompetitionSerializer,FTETeamSerializer
 from Levenshtein import distance
 from functools import reduce
+from bs4 import BeautifulSoup
 
 competitions = ["FL1","BL1","PD","PL","SA","CL",]
 
@@ -13,9 +14,10 @@ def closest_string(string:str,list_string):
     return reduce(lambda str1,str2: str1 if distance(str1,string) < distance(str2,string) else str2,list_string)
 
 def get_FTE_teams():
-    url = ""
-    #requests.get(url)
-    fte_names = ["Test City", "Test Utd", "FC Test","UD Test"]
+    url = "https://projects.fivethirtyeight.com/soccer-predictions/global-club-rankings/"
+    response = requests.get(url)
+    soup = BeautifulSoup(response.content,features="html.parser")
+    fte_names = [team.text for team in soup.find_all(class_="team-div")]
     for fte_name in fte_names:
         serializer = FTETeamSerializer(data={"name":fte_name})
         if serializer.is_valid():
@@ -36,9 +38,9 @@ def save_team(team_data:dict):
         get_FTE_teams()
         fte_name_raw = FTETeam.objects.all().values('name')
     fte_names = list(map(lambda x: x["name"],fte_name_raw))
-    fte_name = closest_string(team_data.get("name"),fte_names)
-    team_data["fte_name"] = FTETeam.objects.get(name=fte_name).id """
-    serializer = TeamSerializer(team[0] if team else None,data=team_data)
+    fte_name = closest_string(team_data.get("short_name"),fte_names)
+    team_data["fte_name"] = FTETeam.objects.get(name=fte_name).id"""
+    serializer = TeamSerializer(team[0] if team else None,data=team_data) 
     if serializer.is_valid():
         serializer.save()
         return True
@@ -83,7 +85,7 @@ def save_match(match_data:dict) -> bool:
     match_data["fulltime_away"] = fulltime.get("away",None)
     match_data["referee"] = match_data.get("referees",None)[0].get("name",None) if match_data.get("referees",None) else None
     match_data["last_updated"] = match_data.get("lastUpdated",None)
-    
+
     serializer = MatchSerializer(match[0] if match else None,data=match_data)
     if serializer.is_valid():
         serializer.save()

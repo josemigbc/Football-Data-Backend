@@ -17,10 +17,10 @@ class CompetitionSerializer(serializers.ModelSerializer):
         fields = '__all__'
         
 class MatchSerializer(serializers.ModelSerializer):
-    home_team = TeamSerializer(read_only=True)
-    away_team = TeamSerializer(read_only=True)
-    competition = CompetitionSerializer(read_only=True)
+    #home_team = TeamSerializer(read_only=True)
+    #away_team = TeamSerializer(read_only=True)
+    #competition = CompetitionSerializer(read_only=True)
     class Meta:
         model = Match
         fields = '__all__'
-        depth = 1
+        #depth = 1
