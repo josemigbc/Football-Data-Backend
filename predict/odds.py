@@ -42,7 +42,6 @@ def save_odds(match):
     if serializer.is_valid():
         serializer.save()
         return True
-    print(serializer.errors)
     return False
 
 def get_probs(league:str):

@@ -10,6 +10,8 @@ class Competition(models.Model):
 
 class FTETeam(models.Model):
     name = models.CharField(max_length=100,unique=True)
+    def __str__(self) -> str:
+        return self.name
 class Team(models.Model):
     id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=100,unique=True)
@@ -17,6 +19,9 @@ class Team(models.Model):
     tla = models.CharField(max_length=3,unique=True)
     fte_name = models.OneToOneField(FTETeam,on_delete=models.CASCADE,null=True,blank=True)
     logo = models.TextField()
+    
+    def __str__(self) -> str:
+        return self.short_name
 
 class Match(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -36,3 +41,5 @@ class Match(models.Model):
     referee = models.TextField(null=True,blank=True)
     home_team = models.ForeignKey(Team,on_delete=models.CASCADE,related_name="home_team")
     away_team = models.ForeignKey(Team,on_delete=models.CASCADE,related_name="away_team")
+    
+    
