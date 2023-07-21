@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'balance',
     'data',
     'predict',
+    'fivethirtyeight',
 ]
 
 MIDDLEWARE = [
