@@ -65,7 +65,10 @@ def manage_teams(soup:Tag | NavigableString | None) -> list[dict] | list[None]:
             props = [ prop.text for prop in team.find_all('td')]
             team_data = dict(zip(fields,props))
             national_league_name = team_data.get("national_league").strip()
-            national_league = FootballCompetition(name=national_league_name).id
+            try:
+                national_league = FootballCompetition.objects.get(name=national_league_name).id
+            except:
+                national_league = None
             team_data.update({
                 "id":int(id),
                 "logo": logo,

@@ -21,6 +21,8 @@ from accounts.views import UserView,UserCreationView
 from balance.views import BalanceView
 from data.views import TeamRetrieve,CompetitionRetrieve,FTETeamRetrieve
 from predict.views import GameRetrieveDestroyView,GameListCreateView,OddsRetrieve
+from fivethirtyeight.views import router
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -37,3 +39,5 @@ urlpatterns = [
     path("api/game/<int:pk>/",GameRetrieveDestroyView.as_view(),name="game"),
     path("api/odds/<int:id>/",OddsRetrieve.as_view(),name="odds"),
 ]
+
+urlpatterns += router.urls

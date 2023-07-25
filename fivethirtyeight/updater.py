@@ -11,14 +11,14 @@ def update_competition(data):
     return False
 
 def update_teams(data):
-    
-    serializer = FootballTeamSerializer(data=data,many=True)
-    if serializer.is_valid():
-        print(serializer.validated_data)
-        serializer.save()
-        return True
-    print(serializer.errors)
-    return False
+    for team in iter(data):
+        serializer = FootballTeamSerializer(data=team)
+        if serializer.is_valid():
+            print(serializer.validated_data)
+            serializer.save()
+            print("OK")
+        print(serializer.errors)
+    return True
 
 def update_matches(data):
     serializer = FootballMatchSerializer(data=data,many=True)
@@ -29,22 +29,26 @@ def update_matches(data):
     return False
 
 def main():
-    result = []
-    amount_teams = FootballTeam.objects.all().count()
-    if amount_teams < 10:
-        teams = get_teams()
-        r = update_teams(teams)
-        result.append(r)
-    else:
-        result.append(None)
-    
     LEAGUES = ["champions-league","bundesliga","premier-league","la-liga","ligue-1","serie-a"]
     for league in LEAGUES:
         competition = get_competition(league)
         r = update_competition(competition)
-        result.append(r)
+        print(f"{'OK' if r else 'Failed'}: {league}")
+    
+    amount_teams = FootballTeam.objects.all().count()
+    if amount_teams < 10:
+        teams = get_teams()
+        r = update_teams(teams)
+        print(r)
+    else:
+        print(False)
+    for league in LEAGUES:    
         matches = get_matches(league)
         r = update_matches(matches)
-        result.append(r)
+        print(f"{'OK' if r else 'Failed'}: {league}")
+#excute
+#python manage.py shell
+#>>> from fivethirtyeight.updater import main
+#>>> main()
     
     
