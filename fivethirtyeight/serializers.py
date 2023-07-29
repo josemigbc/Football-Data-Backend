@@ -18,6 +18,11 @@ class FootballTeamSerializer(serializers.ModelSerializer):
     class Meta:
         model = FootballTeam
         fields = '__all__'
+        
+class FootballTeamNameSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FootballTeam
+        fields = ('id','name','logo')
 
 class FootballMatchSerializer(serializers.ModelSerializer):
     
