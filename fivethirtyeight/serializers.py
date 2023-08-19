@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import FootballTeam,FootballCompetition,FootballMatch
+from django.forms import ModelForm
         
 class FootballCompetitionSerializer(serializers.ModelSerializer):
     
@@ -15,6 +16,7 @@ class FootballCompetitionForMatchAndTeamSerializer(serializers.ModelSerializer):
 class FootballTeamSerializer(serializers.ModelSerializer):
     
     national_league = FootballCompetitionForMatchAndTeamSerializer(read_only=True,many=False)
+    
     class Meta:
         model = FootballTeam
         fields = '__all__'
@@ -29,6 +31,16 @@ class FootballMatchSerializer(serializers.ModelSerializer):
     competition = FootballCompetitionForMatchAndTeamSerializer(read_only=True,many=False)
     team1 = FootballTeamSerializer(read_only=True,many=False)
     team2 = FootballTeamSerializer(read_only=True,many=False)
+    class Meta:
+        model = FootballMatch
+        fields = '__all__'
+        
+class FootballTeamForm(ModelForm):
+    class Meta:
+        model = FootballTeam
+        fields = '__all__'
+        
+class FootballMatchForm(ModelForm):
     class Meta:
         model = FootballMatch
         fields = '__all__'
