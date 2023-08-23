@@ -29,7 +29,7 @@ FOOTBALL_DATA_API_KEY = os.environ.get('FOOTBALL_DATA_API_KEY')
 FOOTBALL_DATA_URL = "https://api.football-data.org/v4/competitions"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = 'RENDER' not in os.environ
+DEBUG = 'PRODUCTION' not in os.environ
 
 if not DEBUG:
     SESSION_COOKIE_SECURE = True
@@ -38,10 +38,10 @@ if not DEBUG:
 
 ALLOWED_HOSTS = []
 
-RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+HOSTNAME = os.environ.get('HOSTNAME')
 
-if RENDER_EXTERNAL_HOSTNAME:
-    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+if HOSTNAME:
+    ALLOWED_HOSTS.append(HOSTNAME)
 
 # Application definition
 
