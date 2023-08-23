@@ -103,9 +103,13 @@ if DEBUG:
     }
 else:
     DATABASES = {
-        'default': dj_database_url.config(
-            conn_max_age=600,
-        ),
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': os.environ.get('NAME'),
+            'USER': os.environ.get('USER'),
+            'PASSWORD': os.environ.get('PASSWORD'),
+            'HOST': os.environ.get('HOST'),
+        }
     }
 
 
