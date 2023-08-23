@@ -47,8 +47,6 @@ INSTALLED_APPS = [
     'corsheaders',
     'accounts',
     'balance',
-    #'predict',
-    'fivethirtyeight',
     'football_data',
 ]
 
