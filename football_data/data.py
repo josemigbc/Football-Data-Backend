@@ -2,7 +2,7 @@ from django.conf import settings
 from django.db import transaction
 import time
 import requests
-from .models import Competition,Match,Standings,Scorers
+from  .models import Competition,Match,Standings,Scorers
 
 
 URL = settings.FOOTBALL_DATA_URL
@@ -107,4 +107,4 @@ class Data:
     def update_all(self):
         for competition in self.competitions:
             self.update(competition)
-            time.sleep(60)        
+            time.sleep(60)
