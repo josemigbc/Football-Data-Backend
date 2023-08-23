@@ -16,7 +16,7 @@ class Competition(models.Model):
 
 class Match(models.Model):
     
-    id = models.IntegerField(_("Id"))
+    id = models.IntegerField(_("Id"),primary_key=True)
     competition = models.CharField(_("Competition"), max_length=5)
     home_team_id = models.IntegerField(_("Home Team Id"))
     away_team_id = models.IntegerField(_("Away Team Id"))

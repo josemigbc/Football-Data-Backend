@@ -12,7 +12,6 @@ def update_competition(data):
 
 def update_teams(data):
     for team in iter(data):
-        print(team)
         obj = FootballTeam.objects.filter(id=team["id"]).first()
         serializer = FootballTeamForm(instance=obj,data=team)
         if serializer.is_valid():

@@ -19,9 +19,9 @@ from django.urls import path,include
 from rest_framework_simplejwt.views import TokenObtainPairView,TokenRefreshView
 from accounts.views import UserView,UserCreationView
 from balance.views import BalanceView
-from data.views import TeamRetrieve,CompetitionRetrieve,FTETeamRetrieve
-from predict.views import GameRetrieveDestroyView,GameListCreateView,OddsRetrieve
-from fivethirtyeight.views import router
+#from predict.views import GameRetrieveDestroyView,GameListCreateView,OddsRetrieve
+from fivethirtyeight.views import urlpatterns as fivethirtyeight_urls
+from football_data.views import urlpatterns as football_data_urls
 
 
 urlpatterns = [
@@ -31,13 +31,12 @@ urlpatterns = [
     path("api/user/", UserView.as_view(), name="user"),
     path("api/signup/", UserCreationView.as_view(), name="signup"),
     path("api/balance/",BalanceView.as_view(),name="balance"),
-    path("api/team/<int:pk>/", TeamRetrieve.as_view(), name="team"),
-    path("api/competition/<int:pk>/", CompetitionRetrieve.as_view(), name="competition"),
-    path("api/fte_name/<int:pk>/", FTETeamRetrieve.as_view(),name="fte_name"),
-    path("api/match/",include("data.urls")),
-    path("api/game/",GameListCreateView.as_view(),name="game list-post"),
-    path("api/game/<int:pk>/",GameRetrieveDestroyView.as_view(),name="game"),
-    path("api/odds/<int:id>/",OddsRetrieve.as_view(),name="odds"),
+    #path("api/team/<int:pk>/", TeamRetrieve.as_view(), name="team"),
+    #path("api/competition/<int:pk>/", CompetitionRetrieve.as_view(), name="competition"),
+    #path("api/fte_name/<int:pk>/", FTETeamRetrieve.as_view(),name="fte_name"),
+    #path("api/game/",GameListCreateView.as_view(),name="game list-post"),
+    #path("api/game/<int:pk>/",GameRetrieveDestroyView.as_view(),name="game"),
+    #path("api/odds/<int:id>/",OddsRetrieve.as_view(),name="odds"),
 ]
 
-urlpatterns += router.urls
+urlpatterns += fivethirtyeight_urls + football_data_urls

@@ -86,8 +86,8 @@ class FootballMatchViewSet(ReadOnlyModelViewSet):
         
 
 router = SimpleRouter()
-router.register(r'matches',FootballMatchViewSet)
-router.register(r'teams',FootballTeamViewSet)
-router.register(r'competitions',FootballCompetitionViewSet)
+router.register(r'api/fivethirtyeight/matches',FootballMatchViewSet)
+router.register(r'api/fivethirtyeight/teams',FootballTeamViewSet)
+router.register(r'api/fivethirtyeight/competitions',FootballCompetitionViewSet)
 
 urlpatterns = router.urls

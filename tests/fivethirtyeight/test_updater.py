@@ -1,5 +1,5 @@
 from django.test import TestCase
-from fivethirtyeight.models import FootballCompetition,FootballTeam
+from fivethirtyeight.models import FootballCompetition,FootballTeam,FootballMatch
 from fivethirtyeight.updater import update_competition,update_matches,update_teams
 from test_data import teams_update, match_data_update, competition_update
 
@@ -45,9 +45,10 @@ class UpdaterTests(TestCase):
         self.assertEqual(competition.id,1869)
     
     def test_update_matches(self):
-        r = update_matches(match_data_update)
-        self.assertTrue(r)
-        
+        update_matches(match_data_update)
+        matches_count = FootballMatch.objects.all().count()
+        matches_updated_count = FootballMatch.objects.filter(status="post").count()
+        self.assertEqual(matches_count,matches_updated_count)
         
     def test_update_teams(self):
         r = update_teams(teams_update)

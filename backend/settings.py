@@ -22,6 +22,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-ux+8hs9snrhh&g*za=b7ejyrzcopgev!66dhn$*sv310+lrwg6'
 
+FOOTBALL_DATA_API_KEY = '40ddfae19e684296ba3a3859b301e1aa'
+FOOTBALL_DATA_URL = "https://api.football-data.org/v4/competitions"
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -44,9 +47,9 @@ INSTALLED_APPS = [
     'corsheaders',
     'accounts',
     'balance',
-    'data',
-    'predict',
+    #'predict',
     'fivethirtyeight',
+    'football_data',
 ]
 
 MIDDLEWARE = [
