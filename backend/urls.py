@@ -15,6 +15,6 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
-from football_data.views import urlpatterns as football_data_urls
+from football_data.views import urlpatterns as football_data_urls, UpdateDataView
 
 urlpatterns = football_data_urls

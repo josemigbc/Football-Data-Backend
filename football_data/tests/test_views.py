@@ -2,6 +2,7 @@ from rest_framework.test import APITestCase
 from django.urls import reverse
 from django.utils import timezone
 import datetime
+from unittest.mock import patch
 from football_data.models import Competition,Match,Scorers,Standings
 
 class CompetitionViewsTest(APITestCase):
@@ -18,7 +19,7 @@ class CompetitionViewsTest(APITestCase):
     def test_list(self):
         url = reverse('competition-list')
         response = self.client.get(url,format='json')
-        data = response.data.get('results')
+        data = response.data
         self.assertEqual(response.status_code,200)
         self.assertEqual(len(data),1)
         self.assertEqual(data[0].get("name"),"Liga Test 1")
@@ -76,28 +77,28 @@ class MatchViewsTest(APITestCase):
     def test_list_by_date(self):
         url = reverse('match-list')
         response = self.client.get(url,data={"date": self.today},format='json')
-        data = response.data.get('results')
+        data = response.data
         self.assertEqual(response.status_code,200)
         self.assertEqual(len(data),1)
         
     def test_list_by_team(self):
         url = reverse('match-list')
         response = self.client.get(url,data={"team": 1},format='json')
-        data = response.data.get('results')
+        data = response.data
         self.assertEqual(response.status_code,200)
         self.assertEqual(len(data),2)
     
     def test_list_by_competition(self):
         url = reverse('match-list')
         response = self.client.get(url,data={"competition": "LT1"},format='json')
-        data = response.data.get('results')
+        data = response.data
         self.assertEqual(response.status_code,200)
         self.assertEqual(len(data),3)
     
     def test_list_by_none(self):
         url = reverse('match-list')
         response = self.client.get(url,format='json')
-        data = response.data.get('results')
+        data = response.data
         self.assertEqual(response.status_code,200)
         self.assertEqual(len(data),1)
     
@@ -126,7 +127,7 @@ class StandingsViewsTest(APITestCase):
     def test_list(self):
         url = reverse('standings-list')
         response = self.client.get(url,format='json')
-        data = response.data.get('results')
+        data = response.data
         self.assertEqual(response.status_code,200)
         self.assertEqual(len(data),1)
         self.assertEqual(data[0].get("standings"),["Standings"])
@@ -156,7 +157,7 @@ class ScorersViewsTest(APITestCase):
     def test_list(self):
         url = reverse('scorers-list')
         response = self.client.get(url,format='json')
-        data = response.data.get('results')
+        data = response.data
         self.assertEqual(response.status_code,200)
         self.assertEqual(len(data),1)
         self.assertEqual(data[0].get("scorers"), ["Scorers"])
@@ -171,3 +172,23 @@ class ScorersViewsTest(APITestCase):
         url = reverse('scorers-detail',args=["LT2"])
         response = self.client.get(url,format='json')
         self.assertEqual(response.status_code,404)
+        
+class UpdateViewTest(APITestCase):
+    @patch('football_data.data.Data.update_all',return_value={'test':'test'})
+    def test_update_with_token_ok(self,mock):
+        url = reverse('update')
+        response = self.client.get(url,format='json',headers={'Update-Token':'TEST'})
+        mock.assert_called_once()
+        self.assertEqual(response.status_code,200)
+    
+    def test_update_with_incorrect_token(self):
+        url = reverse('update')
+        response = self.client.get(url,format='json',headers={'Update-Token':'TE'})
+        self.assertEqual(response.status_code, 403)
+    
+    @patch('football_data.data.Data.update_all',side_effect=Exception)
+    def test_update_with_error(self,mock):
+        url = reverse('update')
+        response = self.client.get(url,format='json',headers={'Update-Token':'TEST'})
+        mock.assert_called_once()
+        self.assertEqual(response.status_code, 409)

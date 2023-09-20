@@ -1,7 +1,11 @@
 from rest_framework.viewsets import ReadOnlyModelViewSet
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
 from rest_framework.routers import SimpleRouter
 from rest_framework.exceptions import NotFound
 from django.utils import timezone
+from django.conf import settings
 from .models import Match,Competition,Standings,Scorers
 from .serializers import DataSerializer
 
@@ -19,15 +23,6 @@ class CompetitionViewSet(ReadOnlyModelViewSet):
             return obj
         except Competition.DoesNotExist:
             raise NotFound('The competition doesnot exist')
-    
-    """ def list(self, request, *args, **kwargs):
-        data = list(map(lambda x: x.data, self.queryset))
-        return Response(data,status=status.HTTP_200_OK)
-    
-    def retrieve(self, request,pk, *args, **kwargs):
-        obj = self.queryset.get(id=pk)
-        data = obj.data
-        return Response(data,status=status.HTTP_200_OK) """
 
 class MatchViewSet(ReadOnlyModelViewSet):
     
@@ -57,7 +52,7 @@ class MatchViewSet(ReadOnlyModelViewSet):
         if team:
             queryset_home = queryset.filter(home_team_id=team)
             queryset_away = queryset.filter(away_team_id=team)
-            queryset = queryset_home.union(queryset_away)
+            queryset = queryset_home.union(queryset_away).order_by('datetime')
         if competition:
             queryset = queryset.filter(competition=competition)
         
@@ -92,6 +87,22 @@ class ScorersViewSet(ReadOnlyModelViewSet):
             return obj
         except Scorers.DoesNotExist:
             raise NotFound('The scorers doesnot exist')
+class UpdateDataView(APIView):
+    
+    def check_token(self,token):
+        return token == settings.UPDATE_TOKEN
+    
+    def get(self,request):
+        token = request.headers.get('Update-Token')
+        if self.check_token(token):
+            from .data import Data
+            data = Data()
+            try:
+                data.update_all()
+                return Response({"update":"All competitions have been updated correctly."})
+            except:
+                return Response({"update":"An error ocurred updating."},status=status.HTTP_409_CONFLICT)
+        return Response({"update":"Incorrect authentication token"},status=status.HTTP_403_FORBIDDEN)
 
 router = SimpleRouter()
 router.register(r"api/football_data/competition",CompetitionViewSet)
@@ -99,4 +110,7 @@ router.register(r"api/football_data/matches",MatchViewSet)
 router.register(r"api/football_data/standings",StandingsViewSet)
 router.register(r"api/football_data/scorers",ScorersViewSet)
 
+from django.urls import path
+
 urlpatterns = router.urls
+urlpatterns.append(path(r"api/football_data/update",UpdateDataView.as_view(),name="update"))
